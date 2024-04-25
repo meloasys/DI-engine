@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from ding.framework import OnlineRLContext, OfflineRLContext
 
 
-def online_logger(record_train_iter: bool = False, train_show_freq: int = 100) -> Callable:
+def online_logger(record_train_iter: bool = False, train_show_freq: int = 100, *args, **kwrgs) -> Callable:
     """
     Overview:
         Create an online RL tensorboard logger for recording training and evaluation metrics.
@@ -37,7 +37,9 @@ def online_logger(record_train_iter: bool = False, train_show_freq: int = 100) -
     """
     if task.router.is_active and not task.has_role(task.role.LEARNER):
         return task.void()
-    writer = DistributedWriter.get_instance()
+    # writer = DistributedWriter.get_instance()
+    _cfg = kwrgs['cfg']
+    writer = DistributedWriter.get_instance(_cfg.exp_name)
     if writer is None:
         raise RuntimeError("logger writer is None, you should call `ding_init(cfg)` at the beginning of training.")
     last_train_show_iter = -1
@@ -80,7 +82,7 @@ def online_logger(record_train_iter: bool = False, train_show_freq: int = 100) -
     return _logger
 
 
-def offline_logger(train_show_freq: int = 100) -> Callable:
+def offline_logger(train_show_freq: int = 100,  *args, **kwrgs) -> Callable:
     """
     Overview:
         Create an offline RL tensorboard logger for recording training and evaluation metrics.
@@ -97,7 +99,9 @@ def offline_logger(train_show_freq: int = 100) -> Callable:
     """
     if task.router.is_active and not task.has_role(task.role.LEARNER):
         return task.void()
-    writer = DistributedWriter.get_instance()
+    # writer = DistributedWriter.get_instance()
+    _cfg = kwrgs['cfg']
+    writer = DistributedWriter.get_instance(_cfg.exp_name)
     if writer is None:
         raise RuntimeError("logger writer is None, you should call `ding_init(cfg)` at the beginning of training.")
     last_train_show_iter = -1
