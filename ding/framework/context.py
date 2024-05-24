@@ -52,6 +52,13 @@ class OnlineRLContext(Context):
     train_iter: int = 0
     train_data: Union[Dict, List] = None
     train_output: Union[Dict, List[Dict]] = None
+    train_reward_mean: float = -np.inf ### add
+    train_reward_raw_mean: float = -np.inf ### add
+    train_bnh_profit: float = -np.inf
+    train_bhn_roi: float = -np.inf
+    train_algo_roi: float = -np.inf
+    train_algo_performance: float = -np.inf
+    train_trade_cnt: float = -np.inf
     # collect
     collect_kwargs: Dict = dataclasses.field(default_factory=dict)
     obs: ttorch.Tensor = None
@@ -64,9 +71,16 @@ class OnlineRLContext(Context):
     inference_output: Dict = None
     # eval
     eval_value: float = -np.inf
+    eval_value_raw: float = -np.inf
     last_eval_iter: int = -1
     last_eval_value: int = -np.inf
     eval_output: List = dataclasses.field(default_factory=dict)
+    eval_bnh_profit: float = -np.inf
+    eval_bhn_roi: float = -np.inf
+    eval_algo_roi: float = -np.inf
+    eval_algo_performance: float = -np.inf
+    eval_trade_cnt: float = -np.inf
+
     # wandb
     info_for_logging: Dict = dataclasses.field(default_factory=dict)
     wandb_url: str = ""
@@ -88,11 +102,27 @@ class OfflineRLContext(Context):
     train_iter: int = 0
     train_data: Union[Dict, List] = None
     train_output: Union[Dict, List[Dict]] = None
+    train_reward_mean: float = -np.inf
+    train_reward_raw_mean: float = -np.inf
+    train_bnh_profit: float = -np.inf
+    train_bhn_roi: float = -np.inf
+    train_algo_roi: float = -np.inf
+    train_algo_performance: float = -np.inf
+    train_trade_cnt: float = -np.inf
+
+
     # eval
     eval_value: float = -np.inf
+    eval_value_raw: float = -np.inf
     last_eval_iter: int = -1
     last_eval_value: int = -np.inf
     eval_output: List = dataclasses.field(default_factory=dict)
+    eval_bnh_profit: float = -np.inf
+    eval_bhn_roi: float = -np.inf
+    eval_algo_roi: float = -np.inf
+    eval_algo_performance: float = -np.inf
+    eval_trade_cnt: float = -np.inf
+
     # wandb
     info_for_logging: Dict = dataclasses.field(default_factory=dict)
     wandb_url: str = ""

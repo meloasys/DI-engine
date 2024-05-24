@@ -155,6 +155,13 @@ def rolloutor(
             if timestep.done:
                 info = {
                     'reward': timestep.info['eval_episode_return'],
+                    'reward_raw': timestep.info['eval_episode_raw_return'],
+                    '_bnh_profit': timestep.info['eval_episode_BNH_raw'],
+                    '_bhn_roi': timestep.info['eval_episode_BNH_roi'],
+                    '_algo_roi': timestep.info['eval_episode_algo_roi'],
+                    '_algo_performance': timestep.info['eval_episode_algo_performance'],
+                    '_trade_cnt': timestep.info['eval_episode_trade_cnt'],
+
                     'time': env_info[timestep.env_id.item()]['time'],
                     'step': env_info[timestep.env_id.item()]['step'],
                     'train_sample': env_info[timestep.env_id.item()]['train_sample'],
@@ -166,6 +173,16 @@ def rolloutor(
                 collected_episode += 1
                 current_id += 1
                 ctx.env_episode += 1
+
+
+        ctx.train_reward_mean = np.mean([d['reward'].item() for d in episode_info])
+        ctx.train_reward_raw_mean = np.mean([d['reward_raw'].item() for d in episode_info])
+
+        ctx.train_bnh_profit = np.mean([d['_bnh_profit'].item() for d in episode_info])
+        ctx.train_bhn_roi = np.mean([d['_bhn_roi'].item() for d in episode_info])
+        ctx.train_algo_roi = np.mean([d['_algo_roi'].item() for d in episode_info])
+        ctx.train_algo_performance = np.mean([d['_algo_performance'].item() for d in episode_info])
+        ctx.train_trade_cnt = np.mean([d['_trade_cnt'].item() for d in episode_info])
 
         total_envstep_count += collected_step
         total_episode_count += collected_episode
@@ -191,6 +208,7 @@ def output_log(episode_info, total_episode_count, total_envstep_count, total_tra
     train_sample_count = sum([d['train_sample'] for d in episode_info])
     duration = sum([d['time'] for d in episode_info])
     episode_return = [d['reward'].item() for d in episode_info]
+    episode_return_raw = [d['reward_raw'].item() for d in episode_info]
     info = {
         'episode_count': episode_count,
         'envstep_count': envstep_count,
@@ -200,6 +218,7 @@ def output_log(episode_info, total_episode_count, total_envstep_count, total_tra
         'avg_envstep_per_sec': envstep_count / duration,
         'avg_train_sample_per_sec': train_sample_count / duration,
         'avg_episode_per_sec': episode_count / duration,
+        'reward_raw_mean': np.mean(episode_return_raw),
         'reward_mean': np.mean(episode_return),
         'reward_std': np.std(episode_return),
         'reward_max': np.max(episode_return),

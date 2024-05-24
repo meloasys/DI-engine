@@ -32,10 +32,13 @@ class ConvEncoder(nn.Module):
     def __init__(
             self,
             obs_shape: SequenceType,
-            hidden_size_list: SequenceType = [32, 64, 64, 128],
             activation: Optional[nn.Module] = nn.ReLU(),
-            kernel_size: SequenceType = [8, 4, 3],
-            stride: SequenceType = [4, 2, 1],
+            # hidden_size_list: SequenceType = [32, 64, 64, 128],
+            # kernel_size: SequenceType = [8, 4, 3],
+            # stride: SequenceType = [4, 2, 1],
+            hidden_size_list: SequenceType = [32, 64, 32, 128],
+            kernel_size: SequenceType = [3, 3, 3],
+            stride: SequenceType = [1, 1, 1],
             padding: Optional[SequenceType] = None,
             layer_norm: Optional[bool] = False,
             norm_type: Optional[str] = None
@@ -150,8 +153,13 @@ class ConvEncoder(nn.Module):
             >>> x = torch.randn(1, 4, 84, 84)
             >>> output = conv(x)
         """
+        # print('conv input', x.shape)
         x = self.main(x)
+        # print(self.main)
+        # print(x.shape)
+        # print(self.mid)
         x = self.mid(x)
+        # print(x.shape)
         return x
 
 

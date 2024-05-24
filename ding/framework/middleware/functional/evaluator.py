@@ -67,6 +67,13 @@ class VectorEvalMonitor(object):
         for i in range(n_episode % env_num):
             each_env_episode[i] += 1
         self._reward = {env_id: deque(maxlen=maxlen) for env_id, maxlen in enumerate(each_env_episode)}
+        self._reward_raw = {env_id: deque(maxlen=maxlen) for env_id, maxlen in enumerate(each_env_episode)}
+        self._bnh_profit = {env_id: deque(maxlen=maxlen) for env_id, maxlen in enumerate(each_env_episode)}
+        self._bhn_roi = {env_id: deque(maxlen=maxlen) for env_id, maxlen in enumerate(each_env_episode)}
+        self._algo_roi = {env_id: deque(maxlen=maxlen) for env_id, maxlen in enumerate(each_env_episode)}
+        self._algo_performance = {env_id: deque(maxlen=maxlen) for env_id, maxlen in enumerate(each_env_episode)}
+        self._trade_cnt = {env_id: deque(maxlen=maxlen) for env_id, maxlen in enumerate(each_env_episode)}
+
         self._info = {env_id: deque(maxlen=maxlen) for env_id, maxlen in enumerate(each_env_episode)}
         self._video = {
             env_id: deque([[] for _ in range(maxlen)], maxlen=maxlen)
@@ -109,6 +116,44 @@ class VectorEvalMonitor(object):
         if isinstance(env_id, np.ndarray):
             env_id = env_id.item()
         self._reward[env_id].append(reward)
+    
+    def update_reward_raw(self, env_id: Union[int, np.ndarray], reward: Any) -> None:
+        if isinstance(reward, torch.Tensor):
+            reward = reward.item()
+        if isinstance(env_id, np.ndarray):
+            env_id = env_id.item()
+        self._reward_raw[env_id].append(reward)
+    
+    def update_bnh_profit(self, env_id: Union[int, np.ndarray], reward: Any) -> None:
+        if isinstance(reward, torch.Tensor):
+            reward = reward.item()
+        if isinstance(env_id, np.ndarray):
+            env_id = env_id.item()
+        self._bnh_profit[env_id].append(reward)
+    def update_bhn_roi(self, env_id: Union[int, np.ndarray], reward: Any) -> None:
+        if isinstance(reward, torch.Tensor):
+            reward = reward.item()
+        if isinstance(env_id, np.ndarray):
+            env_id = env_id.item()
+        self._bhn_roi[env_id].append(reward)
+    def update_algo_roi(self, env_id: Union[int, np.ndarray], reward: Any) -> None:
+        if isinstance(reward, torch.Tensor):
+            reward = reward.item()
+        if isinstance(env_id, np.ndarray):
+            env_id = env_id.item()
+        self._algo_roi[env_id].append(reward)
+    def update_algo_performance(self, env_id: Union[int, np.ndarray], reward: Any) -> None:
+        if isinstance(reward, torch.Tensor):
+            reward = reward.item()
+        if isinstance(env_id, np.ndarray):
+            env_id = env_id.item()
+        self._algo_performance[env_id].append(reward)
+    def update_trade_cnt(self, env_id: Union[int, np.ndarray], reward: Any) -> None:
+        if isinstance(reward, torch.Tensor):
+            reward = reward.item()
+        if isinstance(env_id, np.ndarray):
+            env_id = env_id.item()
+        self._trade_cnt[env_id].append(reward)
 
     def get_episode_return(self) -> list:
         """
@@ -116,6 +161,20 @@ class VectorEvalMonitor(object):
             Sum up all reward and get the total return of one episode.
         """
         return sum([list(v) for v in self._reward.values()], [])  # sum(iterable, start)
+    
+    def get_episode_return_raw(self) -> list:
+        return sum([list(v) for v in self._reward_raw.values()], [])  # sum(iterable, start)
+    def get_episode_bnh_profit(self) -> list:
+        return sum([list(v) for v in self._bnh_profit.values()], [])  # sum(iterable, start)
+    def get_episode_bhn_roi(self) -> list:
+        return sum([list(v) for v in self._bhn_roi.values()], [])  # sum(iterable, start)
+    def get_episode_algo_roi(self) -> list:
+        return sum([list(v) for v in self._algo_roi.values()], [])  # sum(iterable, start)
+    def get_episode_algo_performance(self) -> list:
+        return sum([list(v) for v in self._algo_performance.values()], [])  # sum(iterable, start)
+    def get_episode_trade_cnt(self) -> list:
+        return sum([list(v) for v in self._trade_cnt.values()], [])  # sum(iterable, start)
+
 
     def get_latest_reward(self, env_id: int) -> int:
         """
@@ -276,13 +335,48 @@ def interaction_evaluator(
                     policy.reset([env_id])
                     reward = timestep.info.eval_episode_return
                     eval_monitor.update_reward(env_id, reward)
+
+                    reward_raw = timestep.info.eval_episode_raw_return
+                    eval_monitor.update_reward_raw(env_id, reward_raw)
+
+                    _bnh_profit = timestep.info.eval_episode_BNH_raw
+                    eval_monitor.update_bnh_profit(env_id, _bnh_profit)
+
+                    _bhn_roi = timestep.info.eval_episode_BNH_roi
+                    eval_monitor.update_bhn_roi(env_id, _bhn_roi)
+
+                    _algo_roi = timestep.info.eval_episode_algo_roi
+                    eval_monitor.update_algo_roi(env_id, _algo_roi)
+                    
+                    _algo_performance = timestep.info.eval_episode_algo_performance
+                    eval_monitor.update_algo_performance(env_id, _algo_performance)
+
+                    _trade_cnt = timestep.info.eval_episode_trade_cnt
+                    eval_monitor.update_trade_cnt(env_id, _trade_cnt)
+
+
                     if 'episode_info' in timestep.info:
                         eval_monitor.update_info(env_id, timestep.info.episode_info)
         episode_return = eval_monitor.get_episode_return()
+        episode_return_raw = eval_monitor.get_episode_return_raw()
+
+        episode_bnh_profit = eval_monitor.get_episode_bnh_profit()
+        episode_bhn_roi = eval_monitor.get_episode_bhn_roi()
+        episode_algo_roi = eval_monitor.get_episode_algo_roi()
+        episode_algo_performance = eval_monitor.get_episode_algo_performance()
+        episode_trade_cnt = eval_monitor.get_episode_trade_cnt()
+
         episode_return_min = np.min(episode_return)
         episode_return_max = np.max(episode_return)
         episode_return_std = np.std(episode_return)
         episode_return = np.mean(episode_return)
+        episode_return_raw = np.mean(episode_return_raw)
+        episode_bnh_profit = np.mean(episode_bnh_profit)
+        episode_bhn_roi = np.mean(episode_bhn_roi)
+        episode_algo_roi = np.mean(episode_algo_roi)
+        episode_algo_performance = np.mean(episode_algo_performance)
+        episode_trade_cnt = np.mean(episode_trade_cnt)
+
         stop_flag = episode_return >= cfg.env.stop_value and ctx.train_iter > 0
         if isinstance(ctx, OnlineRLContext):
             logging.info(
@@ -298,6 +392,13 @@ def interaction_evaluator(
             raise TypeError("not supported ctx type: {}".format(type(ctx)))
         ctx.last_eval_iter = ctx.train_iter
         ctx.eval_value = episode_return
+        ctx.eval_value_raw = episode_return_raw
+        ctx.eval_bnh_profit = episode_bnh_profit
+        ctx.eval_bhn_roi = episode_bhn_roi
+        ctx.eval_algo_roi = episode_algo_roi
+        ctx.eval_algo_performance = episode_algo_performance
+        ctx.eval_trade_cnt = episode_trade_cnt
+        
         ctx.eval_value_min = episode_return_min
         ctx.eval_value_max = episode_return_max
         ctx.eval_value_std = episode_return_std

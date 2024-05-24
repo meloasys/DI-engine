@@ -55,6 +55,12 @@ def online_logger(record_train_iter: bool = False, train_show_freq: int = 100, *
                 writer.add_scalar('basic/eval_episode_return_mean-train_iter', ctx.eval_value, ctx.train_iter)
             else:
                 writer.add_scalar('basic/eval_episode_return_mean', ctx.eval_value, ctx.env_step)
+                writer.add_scalar('basic/eval_episode_return_raw_mean', ctx.eval_value_raw, ctx.env_step)
+                writer.add_scalar('basic/eval_episode_BNH_raw', ctx.eval_bnh_profit, ctx.env_step)
+                writer.add_scalar('basic/eval_episode_BNH_roi', ctx.eval_bhn_roi, ctx.env_step)
+                writer.add_scalar('basic/eval_episode_algo_roi', ctx.eval_algo_roi, ctx.env_step)
+                writer.add_scalar('basic/eval_episode_algo_performance', ctx.eval_algo_performance, ctx.env_step)
+                writer.add_scalar('basic/eval_episode_trade_cnt', ctx.eval_trade_cnt, ctx.env_step)
         if ctx.train_output is not None and ctx.train_iter - last_train_show_iter >= train_show_freq:
             last_train_show_iter = ctx.train_iter
             if isinstance(ctx.train_output, List):
@@ -78,6 +84,17 @@ def online_logger(record_train_iter: bool = False, train_show_freq: int = 100, *
                         writer.add_scalar('basic/train_{}-env_step'.format(k), v, ctx.env_step)
                     else:
                         writer.add_scalar('basic/train_{}'.format(k), v, ctx.env_step)
+        
+        if not np.isnan(ctx.train_reward_mean):
+            writer.add_scalar('basic/train_reward_mean', ctx.train_reward_mean, ctx.env_step)
+            writer.add_scalar('basic/train_reward_raw_mean', ctx.train_reward_raw_mean, ctx.env_step)
+
+            writer.add_scalar('basic/train_bnh_profit', ctx.train_bnh_profit, ctx.env_step)
+            writer.add_scalar('basic/train_bhn_roi', ctx.train_bhn_roi, ctx.env_step)
+            writer.add_scalar('basic/train_algo_roi', ctx.train_algo_roi, ctx.env_step)
+            writer.add_scalar('basic/train_algo_performance', ctx.train_algo_performance, ctx.env_step)
+            writer.add_scalar('basic/train_trade_cnt', ctx.train_trade_cnt, ctx.env_step)
+
 
     return _logger
 
