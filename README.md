@@ -32,7 +32,7 @@
 [![GitHub license](https://img.shields.io/github/license/opendilab/DI-engine)](https://github.com/opendilab/DI-engine/blob/master/LICENSE)
 [![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-yellow)](https://huggingface.co/OpenDILabCommunity)
 [![Open in OpenXLab](https://cdn-static.openxlab.org.cn/header/openxlab_models.svg)](https://openxlab.org.cn/models?search=opendilab)
-[![discord badge](https://dcbadge.vercel.app/api/server/gXkjrFCJ?style=flat)](https://discord.gg/gXkjrFCJ)
+[![discord badge](https://dcbadge.vercel.app/api/server/dkZS2JF56X?style=flat)](https://discord.gg/dkZS2JF56X)
 [![slack badge](https://img.shields.io/badge/Slack-join-blueviolet?logo=slack&amp)](https://join.slack.com/t/opendilab/shared_invite/zt-v9tmv4fp-nUBAQEH1_Kuyu_q4plBssQ)
 
 Updated on 2024.02.04 DI-engine-v0.5.1
@@ -317,6 +317,9 @@ P.S: The `.py` file in `Runnable Demo` can be found in `dizoo`
 | 37 |                       [tabmwp](https://promptpg.github.io/explore.html)                       |                                                                                      ![discrete](https://img.shields.io/badge/-discrete-brightgreen)                                                                                      |                                ![original](./dizoo/tabmwp/tabmwp.jpeg)                                |                                                                                         [dizoo link](https://github.com/opendilab/DI-engine/tree/main/dizoo/tabmwp) <br> env tutorial <br> 环境指南                                                                                         |
 | 38 |            [frozen_lake](https://gymnasium.farama.org/environments/toy_text/frozen_lake)      |                                                                                      ![discrete](https://img.shields.io/badge/-discrete-brightgreen)                                                                                      |                                ![original](./dizoo/frozen_lake/FrozenLake.gif)                        |                                                                                         [dizoo link](https://github.com/opendilab/DI-engine/tree/main/dizoo/frozen_lake) <br> env tutorial <br> 环境指南                                                                                         |
 | 39 | [ising_model](https://github.com/mlii/mfrl/tree/master/examples/ising_model)                  |                            ![discrete](https://img.shields.io/badge/-discrete-brightgreen) ![marl](https://img.shields.io/badge/-MARL-yellow)                                                                                             |                                ![original](./dizoo/ising_env/ising_env.gif)                           | [dizoo link](https://github.com/opendilab/DI-engine/tree/main/dizoo/ising_env) <br> env tutorial <br> [环境指南](https://di-engine-docs.readthedocs.io/zh_CN/latest/13_envs/ising_model_zh.html) |
+| 40 | [taxi](https://www.gymlibrary.dev/environments/toy_text/taxi/)                  |                            ![discrete](https://img.shields.io/badge/-discrete-brightgreen)                                                                                 |                                ![original](./dizoo/taxi/Taxi-v3_episode_0.gif)                           | dizoo link <br> env tutorial <br> 环境指南 |
+
+
 
 ![discrete](https://img.shields.io/badge/-discrete-brightgreen) means discrete action space
 
@@ -448,7 +451,7 @@ DI-engine utilizes [TreeTensor](https://github.com/opendilab/DI-treetensor) as t
 
 - [File an issue](https://github.com/opendilab/DI-engine/issues/new/choose) on Github
 - Open or participate in our [forum](https://github.com/opendilab/DI-engine/discussions)
-- Discuss on DI-engine [discord server](https://discord.gg/TC2pAtnw)
+- Discuss on DI-engine [discord server](https://discord.gg/dkZS2JF56X)
 - Discuss on DI-engine [slack communication channel](https://join.slack.com/t/opendilab/shared_invite/zt-v9tmv4fp-nUBAQEH1_Kuyu_q4plBssQ)
 - Discuss on DI-engine's WeChat group (i.e. add us on WeChat: ding314assist)
 
