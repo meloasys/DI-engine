@@ -174,15 +174,26 @@ def rolloutor(
                 current_id += 1
                 ctx.env_episode += 1
 
+        if episode_info != []:
+            ctx.train_reward_mean = np.mean([d['reward'].item() for d in episode_info])
+            ctx.train_reward_raw_mean = np.mean([d['reward_raw'].item() for d in episode_info])
 
-        ctx.train_reward_mean = np.mean([d['reward'].item() for d in episode_info])
-        ctx.train_reward_raw_mean = np.mean([d['reward_raw'].item() for d in episode_info])
+            ctx.train_bnh_profit = np.mean([d['_bnh_profit'].item() for d in episode_info])
+            ctx.train_bhn_roi = np.mean([d['_bhn_roi'].item() for d in episode_info])
+            ctx.train_algo_roi = np.mean([d['_algo_roi'].item() for d in episode_info])
+            ctx.train_algo_performance = np.mean([d['_algo_performance'].item() for d in episode_info])
+            ctx.train_trade_cnt = np.mean([d['_trade_cnt'].item() for d in episode_info])
+        else:
+            ctx.train_reward_mean = float('nan')
+            ctx.train_reward_raw_mean = float('nan')
 
-        ctx.train_bnh_profit = np.mean([d['_bnh_profit'].item() for d in episode_info])
-        ctx.train_bhn_roi = np.mean([d['_bhn_roi'].item() for d in episode_info])
-        ctx.train_algo_roi = np.mean([d['_algo_roi'].item() for d in episode_info])
-        ctx.train_algo_performance = np.mean([d['_algo_performance'].item() for d in episode_info])
-        ctx.train_trade_cnt = np.mean([d['_trade_cnt'].item() for d in episode_info])
+            ctx.train_bnh_profit = float('nan')
+            ctx.train_bhn_roi = float('nan')
+            ctx.train_algo_roi = float('nan')
+            ctx.train_algo_performance = float('nan')
+            ctx.train_trade_cnt = float('nan')
+        
+        # print(ctx.train_reward_raw_mean, ctx.train_trade_cnt)
 
         total_envstep_count += collected_step
         total_episode_count += collected_episode
